@@ -1,8 +1,9 @@
-TOP = /home/robindmrl/PeleLMeX/
-PELELMEX_HOME      = ${TOP}
-AMREX_HOME         = ${PELELMEX_HOME}/Submodules/amrex
-PELE_PHYSICS_HOME  = ${PELELMEX_HOME}/Submodules/PelePhysics
-AMREX_HYDRO_HOME   = ${PELELMEX_HOME}/Submodules/AMReX-Hydro
+TOP = /home/robindmrl/PeleLMeX/Submodules
+AMREX_HOME         ?= ${TOP}/amrex
+PELELMEX_HOME      ?= /home/robindmrl/PeleLMeX
+PELE_PHYSICS_HOME  ?= ${TOP}/PelePhysics
+AMREX_HYDRO_HOME   ?= ${TOP}/AMReX-Hydro
+
 
 # AMReX
 DIM             = 2
@@ -22,8 +23,8 @@ USE_HIP         = FALSE
 USE_EFIELD      = FALSE
 
 # PelePhysics
-Chemistry_Model = drm19
-Eos_Model		= Fuego
+Chemistry_Model = methaneIons_diRenzo
+Eos_Model	 = Fuego
 Transport_Model = Simple
 
 include $(PELELMEX_HOME)/Utils/Make.PeleLMeX

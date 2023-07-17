@@ -4,6 +4,7 @@ AMREX_HOME         = ${PELELMEX_HOME}/Submodules/amrex
 PELE_PHYSICS_HOME  = ${PELELMEX_HOME}/Submodules/PelePhysics
 AMREX_HYDRO_HOME   = ${PELELMEX_HOME}/Submodules/AMReX-Hydro
 
+
 # AMReX
 DIM             = 2
 DEBUG           = FALSE
@@ -19,11 +20,11 @@ USE_CUDA        = FALSE
 USE_HIP         = FALSE
 
 # PeleLMeX
-USE_EFIELD      = FALSE
+USE_EFIELD      = TRUE
 
 # PelePhysics
-Chemistry_Model = drm19
-Eos_Model		= Fuego
+Chemistry_Model = methaneIons_diRenzo
+Eos_Model	 = Fuego
 Transport_Model = Simple
 
 include $(PELELMEX_HOME)/Utils/Make.PeleLMeX
