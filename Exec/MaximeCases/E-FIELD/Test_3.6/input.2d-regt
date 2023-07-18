@@ -1,0 +1,131 @@
+#----------------------DOMAIN DEFINITION------------------------
+prob.Xmax = 0.0185 #Maximum size in the x direction
+prob.Ymax = 0.037 #Maximum size in the y direction
+prob.Zmax = 0.0185 #Maximum size in the z direction
+
+geometry.is_periodic = 0 0                          # For each dir, 0: non-perio, 1: periodic
+geometry.coord_sys   = 0                              # 0 => cart, 1 => RZ
+geometry.prob_lo     = 0.0 0.0                   # x_lo y_lo (z_lo)
+geometry.prob_hi     = 0.0185 0.037             # x_hi y_hi (z_hi)
+
+# >>>>>>>>>>>>>  BC FLAGS <<<<<<<<<<<<<<<<
+# Interior, Inflow, Outflow, Symmetry,
+# SlipWallAdiab, NoSlipWallAdiab, SlipWallIsotherm, NoSlipWallIsotherm
+peleLM.lo_bc = Symmetry Inflow
+peleLM.hi_bc = SlipWallAdiab Outflow
+
+
+#-------------------------AMR CONTROL----------------------------
+amr.n_cell          = 128 256 32        # Level 0 number of cells in each direction   
+amr.v               = 1                # AMR verbose
+amr.max_level       = 0                # maximum level number allowed
+amr.ref_ratio       = 2 2 2 2          # refinement ratio
+amr.regrid_int      = 2                # how often to regrid
+amr.n_error_buf     = 2 2 2 2          # number of buffer cells in error est
+amr.grid_eff        = 0.7              # what constitutes an efficient grid
+amr.blocking_factor = 16               # block factor in grid generation (min box size)
+amr.max_grid_size   = 64              # max box size
+
+
+#--------------------------- Problem -------------------------------
+prob.Xf = 0.0011    # Radius of the fuel pipe
+prob.Xe = 0.0001    # Thickness of the extruded tube
+prob.Xc = 0.0113    # Size of the oxidizer fuel
+
+prob.Yin = 0.003  # Height of the inflow entrance at t=0s
+prob.V_fu = 0.15  # Speed of the fuel in inflow
+prob.V_ox = 0.031 # Speed of the oxidizer in inflow
+prob.V_air = 0.0  # Speed of the air flow around the burner
+prob.T_fu = 300   # Temperature of the fuel
+prob.T_ox = 300   # Temperature of the oxidizer
+prob.T_air = 300  # Temperature of the air
+prob.T_obst = 450 # Temperature of the fuel pipe (=obstacle)
+
+prob.do_ignition = 1    # Do you want to do ignition ?
+prob.ign_rad = 0.001    # Size of the ignition blob
+prob.ign_T = 1900       # Temperature inside the ignition blob
+
+prob.P_mean = 100000.0 # Ambient pressure in the chamber
+
+prob.dilution = 1.0 # Proportion of CH4 in the fuel mix. Ch4 is diluted in N2
+
+prob.PhiV_y_hi = 11100.0   # The electric potential at the top electrode
+pron.PhiV_y_lo = 0.0     # The electric potential at the bottom electrode
+
+prob.PhiV_x_hi = 0.0     # The electric potential at the left side
+pron.PhiV_x_lo = 0.0     # The electric potential at the right side
+#-------------------------PeleLM CONTROL----------------------------
+#peleLM.gravity = 0.0 -9.81 0.0
+peleLM.gravity = 0.0 0.0 0.0
+
+peleLM.v = 2
+peleLM.incompressible = 0
+peleLM.rho = 1.17
+peleLM.mu = 0.0
+peleLM.use_wbar = 1
+peleLM.sdc_iterMax = 1
+peleLM.floor_species = 0
+peleLM.num_init_iter = 3
+peleLM.advection_scheme = "Godunov_PLM"
+peleLM.do_temporals = 1 # use to calculate the integrals
+
+amr.restart = chk15000
+amr.check_int = 1000
+amr.plot_int = 100
+amr.max_step = 01000
+amr.dt_shrink = 0.2
+#amr.stop_time = 0.001
+amr.cfl = 0.04
+amr.derive_plot_vars = avg_pressure mag_vort mass_fractions chargedistrib efieldx efieldy LorentzFx LorentzFy 
+
+peleLM.chem_integrator = "ReactorCvode"
+peleLM.use_typ_vals_chem = 1          # Use species/temp typical values in CVODE
+ode.rtol = 1.0e-7                     # Relative tolerance of the chemical solve
+ode.atol = 1.0e-6                     # Absolute tolerance factor applied on typical values
+cvode.solve_type = denseAJ_direct     # CVODE Linear solve type (for Newton direction) 
+cvode.max_order  = 4                  # CVODE max BDF order. 
+
+#--------------------REFINEMENT CONTROL------------------------
+ef.phiV_lo_bc = Dirichlet Dirichlet
+ef.phiV_hi_bc = Dirichlet Dirichlet
+ef.phiV_polarity_lo = Neutral Cathode
+ef.phiV_polarity_hi = Neutral Anode
+
+ef.restart_nonEF = 1  #If 1, restart the simulation from the last data but allow to change some parameters like the BC but not the initial condition
+
+ef.plot_extras = 1  #plot all the variables for efield
+ef.do_ionsBalance = 1
+ef.GMRES_rel_tol  = 1.0e-5
+ef.GMRES_abs_tol  = 1.0e-13
+ef.JFNK_lambda = 1.0e-7
+ef.JFNK_diffType = 1
+ef.PC_approx = 2
+#ef.PC_damping = 0.95
+ef.advection_scheme_order = 1
+ef.precond.diff_verbose = 0
+ef.precond.Stilda_verbose = 0
+ef.precond.fixedIter = 3
+#ef.precond.max_coarsening_level_diff = 3
+gmres.krylovBasis_size = 20
+gmres.verbose  = 0
+gmres.max_restart = 3
+
+#--------------------REFINEMENT CONTROL------------------------
+#amr.refinement_indicators = temp
+#amr.temp.max_level     = 1
+#amr.temp.value_greater = 305
+#amr.temp.field_name    = temp
+
+#amr.refinement_indicators = magVort
+#amr.magVort.max_level     = 1
+#amr.magVort.value_greater = 500.0
+#amr.magVort.field_name    = mag_vort
+
+#amr.refinement_indicators = yE
+#amr.yE.max_level     = 3
+#amr.yE.value_greater = 1.0e17
+#amr.yE.field_name    = nE
+
+#amrex.fpe_trap_invalid = 1
+#amrex.fpe_trap_zero = 1
+#amrex.fpe_trap_overflow = 1
