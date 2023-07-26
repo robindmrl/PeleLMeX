@@ -1,13 +1,13 @@
 #----------------------DOMAIN DEFINITION------------------------
 geometry.is_periodic = 0 0               # For each dir, 0: non-perio, 1: periodic
 geometry.coord_sys   = 0                  # 0 => cart, 1 => RZ
-geometry.prob_lo     = -0.0 0.0        # x_lo y_lo (z_lo)
-geometry.prob_hi     =  0.01 0.04        # x_hi y_hi (z_hi)
+geometry.prob_lo     = 0.0 0.0        # x_lo y_lo (z_lo)
+geometry.prob_hi     =  0.02 0.08        # x_hi y_hi (z_hi)
 
 # >>>>>>>>>>>>>  BC FLAGS <<<<<<<<<<<<<<<<
 # Interior, Inflow, Outflow, Symmetry,
 # SlipWallAdiab, NoSlipWallAdiab, SlipWallIsotherm, NoSlipWallIsotherm
-peleLM.lo_bc = Outflow Inflow
+peleLM.lo_bc = Symmetry Inflow
 peleLM.hi_bc = Outflow Outflow
 
 
@@ -27,15 +27,15 @@ prob.P_mean = 101325.0
 prob.standoff = 0.1085
 prob.pertmag = 0.000
 
-prob.fuel_ox_split = 0.0009
-prob.ox_air_split = 0.005
+prob.fuel_ox_split = 0.0024
+prob.ox_air_split = 0.027
 prob.ymax = 0.0009
-prob.V_fu = 0.389
-prob.V_ox = 0.462
-prob.T_fu = 510
-prob.T_ox = 510
-prob.T_air = 300
-prob.dilution = 0.9
+prob.V_fu = 0.148
+prob.V_ox = 0.00000597
+prob.T_fu = 294
+prob.T_ox = 294
+prob.T_air = 294
+prob.dilution = 1
 
 prob.do_ignition = 1
 prob.ign_radius = 0.002
@@ -56,12 +56,11 @@ peleLM.fuel_name = CH4
 
 #amr.restart = chk02000
 #amr.regrid_on_restart = 1
-amr.check_int = 2000
-amr.plot_int = 100
-amr.max_step = 100000
+amr.check_int = 5000
+amr.plot_int = 500
+#amr.max_step = 100000
 amr.dt_shrink = 0.1
-#amr.stop_time = 1.1
-#amr.stop_time = 1.00
+amr.stop_time = 3
 #amr.cfl = 0.035
 amr.cfl = 0.01
 amr.derive_plot_vars = avg_pressure mag_vort mass_fractions
@@ -86,18 +85,18 @@ cvode.max_order  = 4                  # CVODE max BDF order.
 #amr.magVort.value_greater = 500.0
 #amr.magVort.field_name    = mag_vort
 
-amr.refinement_indicators = yH_Crse yH_Fine CH2O
-amr.yH_Crse.max_level     = 1
-amr.yH_Crse.value_greater = 1.50e-4
-amr.yH_Crse.field_name    = Y(H)
+#amr.refinement_indicators = yH_Crse yH_Fine CH2O
+#amr.yH_Crse.max_level     = 1
+#amr.yH_Crse.value_greater = 1.50e-4
+#amr.yH_Crse.field_name    = Y(H)
 
-amr.yH_Fine.max_level     = 3
-amr.yH_Fine.value_greater = 2.00e-4
-amr.yH_Fine.field_name    = Y(H)
+#amr.yH_Fine.max_level     = 3
+#amr.yH_Fine.value_greater = 2.00e-4
+#amr.yH_Fine.field_name    = Y(H)
 
-amr.CH2O.max_level     = 4
-amr.CH2O.value_greater = 1.00e-3
-amr.CH2O.field_name    = Y(CH2O)
+#amr.CH2O.max_level     = 4
+#amr.CH2O.value_greater = 1.00e-3
+#amr.CH2O.field_name    = Y(CH2O)
 
 #amrex.fpe_trap_invalid = 1
 #amrex.fpe_trap_zero = 1

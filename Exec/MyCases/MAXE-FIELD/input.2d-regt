@@ -11,17 +11,17 @@ geometry.prob_hi     = 0.0185 0.037             # x_hi y_hi (z_hi)
 # >>>>>>>>>>>>>  BC FLAGS <<<<<<<<<<<<<<<<
 # Interior, Inflow, Outflow, Symmetry,
 # SlipWallAdiab, NoSlipWallAdiab, SlipWallIsotherm, NoSlipWallIsotherm
-peleLM.lo_bc = Symmetry Inflow
+peleLM.lo_bc = Symmetry      Inflow
 peleLM.hi_bc = SlipWallAdiab Outflow
 
 
 #-------------------------AMR CONTROL----------------------------
 amr.n_cell          = 128 256 32        # Level 0 number of cells in each direction   
 amr.v               = 1                # AMR verbose
-amr.max_level       = 0                # maximum level number allowed
+amr.max_level       = 2                # maximum level number allowed
 amr.ref_ratio       = 2 2 2 2          # refinement ratio
 amr.regrid_int      = 2                # how often to regrid
-amr.n_error_buf     = 2 2 2 2          # number of buffer cells in error est
+amr.n_error_buf     = 4 2 2 2          # number of buffer cells in error est
 amr.grid_eff        = 0.7              # what constitutes an efficient grid
 amr.blocking_factor = 16               # block factor in grid generation (min box size)
 amr.max_grid_size   = 64              # max box size
@@ -49,7 +49,7 @@ prob.P_mean = 100000.0 # Ambient pressure in the chamber
 
 prob.dilution = 0.7 # Proportion of CH4 in the fuel mix. Ch4 is diluted in N2
 
-prob.PhiV_y_hi = 100.0   # The electric potential at the top electrode
+prob.PhiV_y_hi = -5500.0   # The electric potential at the top electrode
 prob.PhiV_y_lo = 0.0     # The electric potential at the bottom electrode
 
 prob.PhiV_x_hi = 0.0     # The electric potential at the left side
@@ -64,23 +64,25 @@ peleLM.rho = 1.17
 peleLM.mu = 0.0
 peleLM.use_wbar = 1
 peleLM.sdc_iterMax = 2
-peleLM.floor_species = 0
 peleLM.num_init_iter = 3
 peleLM.advection_scheme = "Godunov_PLM"
 peleLM.do_temporals = 1 # use to calculate the integrals
 peleLM.do_mass_balance = 1
 peleLM.deltaT_verbose = 1
 peleLM.deltaT_iterMax = 15
+peleLM.deltaT_crashIfFailing = 0
+peleLM.floor_species = 0
 
-#amr.restart = chk08000
-amr.check_int = 15000
-amr.plot_int = 500
-amr.max_step = 1000
+amr.restart = chk73016
+amr.check_int = 20000
+amr.plot_int = 1000
+amr.max_step = 20000
 amr.dt_shrink = 0.01
-#amr.stop_time = 0.2
+amr.init_dt = 0.000001
+#amr.stop_time = 1.0
 amr.cfl = 0.8
-#amr.derive_plot_vars = avg_pressure mag_vort mass_fractions chargedistrib efieldx efieldy LorentzFx LorentzFy 
-amr.derive_plot_vars = avg_pressure mag_vort mass_fractions
+amr.derive_plot_vars = avg_pressure mag_vort mass_fractions chargedistrib efieldx efieldy LorentzFx LorentzFy 
+#amr.derive_plot_vars = avg_pressure mag_vort mass_fractions
 
 peleLM.chem_integrator = "ReactorCvode"
 peleLM.use_typ_vals_chem = 1          # Use species/temp typical values in CVODE
@@ -95,11 +97,11 @@ ef.phiV_hi_bc = Neumann Dirichlet
 ef.phiV_polarity_lo = Neutral Cathode
 ef.phiV_polarity_hi = Neutral Anode
 
-ef.restart_nonEF = 0  #If 1, restart the simulation from the last data but allow to change some parameters like the BC but not the initial condition
+ef.restart_nonEF = 1  #If 1, restart the simulation from the last data but allow to change some parameters like the BC but not the initial condition
 
 ef.plot_extras = 1  #plot all the variables for efield
 ef.do_ionsBalance = 1
-ef.GMRES_rel_tol  = 1.0e-5
+ef.GMRES_rel_tol  = 1.0e-6
 ef.GMRES_abs_tol  = 1.0e-13
 ef.JFNK_lambda = 1.0e-7
 ef.JFNK_diffType = 1
@@ -108,17 +110,21 @@ ef.PC_approx = 2
 ef.advection_scheme_order = 1
 ef.precond.diff_verbose = 0
 ef.precond.Stilda_verbose = 0
-ef.precond.fixedIter = 3
+ef.precond.fixedIter = 7
 #ef.precond.max_coarsening_level_diff = 3
 gmres.krylovBasis_size = 20
 gmres.verbose  = 0
 gmres.max_restart = 3
 
 #--------------------REFINEMENT CONTROL------------------------
-amr.refinement_indicators = HR
-amr.HR.max_level     = 1
+amr.refinement_indicators = HR flamme
+amr.HR.max_level     = 2
 amr.HR.value_greater = 5e7
 amr.HR.field_name    = HeatRelease
+
+amr.flamme.max_level = 1
+amr.flamme.value_greater = 600 
+amr.flamme.field_name = temp
 
 #amr.refinement_indicators = magVort
 #amr.magVort.max_level     = 1
@@ -132,4 +138,4 @@ amr.HR.field_name    = HeatRelease
 
 #amrex.fpe_trap_invalid = 1
 #amrex.fpe_trap_zero = 1
-#amrex.fpe_trap_overflow = 1
+#amrex.fpe_trapoverflow = 1
